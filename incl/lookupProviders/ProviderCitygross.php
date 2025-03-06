@@ -14,7 +14,9 @@
  * @since      File available since Release X.X
  */
 
+
 require_once __DIR__ . "/../api.inc.php";
+
 class ProviderCitygross extends LookupProvider {
 
     private $result;
@@ -99,11 +101,12 @@ class ProviderCitygross extends LookupProvider {
                 }
             }
             return $nutrients;
-        }
+    }
 
-        private function getNutrientUnit($unitCode) {
-            $units = [
-                0 => 'g', 1 => 'mg', 2 => 'μg', 3 => 'kcal', 4 => 'kJ', 5 => 'kcal'
-            ];
-            return $units[$unitCode] ?? '';
-        }
+    private function getNutrientUnit($unitCode) {
+        $units = [
+            0 => 'g', 1 => 'mg', 2 => 'μg', 3 => 'kcal', 4 => 'kJ', 5 => 'kcal'
+        ];
+        return $units[$unitCode] ?? '';
+    }
+}
