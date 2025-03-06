@@ -74,7 +74,7 @@ class ProviderCitygross extends LookupProvider {
         // Extract product details
         $product = $data['searchResults']['products'][0];
         return [
-            'name' => $product['name'] ?? 'Unknown',
+            sanitizeString('name' => $product['name'] ?? 'Unknown')/*,
             'brand' => $product['brand'] ?? 'Unknown',
             'description' => strip_tags($product['description'] ?? ''),
             'category' => $product['category'] ?? 'Unknown',
@@ -83,7 +83,7 @@ class ProviderCitygross extends LookupProvider {
             'image' => isset($product['images'][0]['url']) ? 'https://www.citygross.se/' . $product['images'][0]['url'] : null,
             'price' => $product['productStoreDetails']['prices']['currentPrice']['price'] ?? null,
             'price_unit' => $product['productStoreDetails']['prices']['currentPrice']['comparativePriceUnit'] ?? '',
-            'nutrients' => $this->extractNutrients($product)
+            'nutrients' => $this->extractNutrients($product)*/
         ];
     }
 
