@@ -53,6 +53,8 @@ const LOOKUP_ID_OPENGTINDB    = "6";
 const LOOKUP_ID_FEDERATION    = "7";
 const LOOKUP_ID_PLUS          = "8";
 const LOOKUP_ID_DISCOGS       = "9";
+const LOOKUP_ID_CITYGROSS     = "10";
+
 
 /**
  * Dockerfile changes this to "1", so that the default is true
@@ -119,7 +121,9 @@ class DatabaseConnection {
         "BBUDDY_SERVER_ENABLED" => "0",
         "BBUDDY_SERVER_POPUPSHOWN" => "0",
         "BBUDDY_SERVER_NEXTSYNC" => "0",
-        "LOOKUP_ORDER" => LOOKUP_ID_OPENFOODFACTS . "," .
+        "LOOKUP_ORDER" =>
+            LOOKUP_ID_CITYGROSS . "," .
+            LOOKUP_ID_OPENFOODFACTS . "," .
             LOOKUP_ID_UPCDB . "," .
             LOOKUP_ID_UPCDATABASE . "," .
             LOOKUP_ID_ALBERTHEIJN . "," .

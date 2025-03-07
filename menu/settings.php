@@ -215,6 +215,7 @@ function generateApiKeyChangeScript(string $functionName, string $keyId): string
 function getProviderListItems(UiEditor $html): array {
     $config                                 = BBConfig::getInstance();
     $result                                 = array();
+    $result["id" . LOOKUP_ID_CITYGROSS]     = $html->addListItem($html->addCheckbox('LOOKUP_USE_CITYGROSS', 'Citygross', $config["LOOKUP_USE_CITYGROSS"], false, false, true), "Uses Citygross.se", LOOKUP_ID_CITYGROSS, true);
     $result["id" . LOOKUP_ID_OPENFOODFACTS] = $html->addListItem($html->addCheckbox('LOOKUP_USE_OFF', 'Open Food Facts', $config["LOOKUP_USE_OFF"], false, false, true), "Uses OpenFoodFacts.org", LOOKUP_ID_OPENFOODFACTS, true);
     $result["id" . LOOKUP_ID_UPCDB]         = $html->addListItem($html->addCheckbox('LOOKUP_USE_UPC', 'UPC Item DB', $config["LOOKUP_USE_UPC"], false, false, true), "Uses UPCitemDB.com", LOOKUP_ID_UPCDB, true);
     $result["id" . LOOKUP_ID_ALBERTHEIJN]   = $html->addListItem($html->addCheckbox('LOOKUP_USE_AH', 'Albert Heijn', $config["LOOKUP_USE_AH"], false, false, true), "Uses AH.nl", LOOKUP_ID_ALBERTHEIJN, true);
