@@ -39,45 +39,55 @@ class ProviderCitygross extends LookupProvider {
         global $CONFIG;
 
         $apiUrl = 'https://www.citygross.se/api/v1/Loop54/search/quick/?SearchQuery=';
-        $url = $this->apiUrl . urlencode($barcode);
+        $url = $apiUrl . $barcode;
 
-        $headers = [
-            'Host: www.citygross.se',
-            'Sec-Ch-Ua-Platform: "Linux"',
-            'Accept-Language: en-US,en;q=0.9',
-            'Accept: application/json',
-            'Sec-Ch-Ua: "Chromium";v="133", "Not(A:Brand";v="99"',
-            'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
-            'Sec-Ch-Ua-Mobile: ?0',
-            'Sec-Fetch-Site: same-origin',
-            'Sec-Fetch-Mode: cors',
-            'Sec-Fetch-Dest: empty',
-            'Referer: https://www.citygross.se/',
-            'Accept-Encoding: gzip, deflate, br',
-            'Priority: u=1, i'
-        ];
+        $connection_method = "web";
+        //$connection_method = "curl";
 
-        // Initialize cURL
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate,br'); // Handle compressed response
+        if ($connection_method == "web") {
+            $response = $this->execute($url, METHOD_GET);
+        } elseif ($connection_method == "curl"){
+            $headers = [
+                'Host: www.citygross.se',
+                'Sec-Ch-Ua-Platform: "Linux"',
+                'Accept-Language: en-US,en;q=0.9',
+                'Accept: application/json',
+                'Sec-Ch-Ua: "Chromium";v="133", "Not(A:Brand";v="99"',
+                'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
+                'Sec-Ch-Ua-Mobile: ?0',
+                'Sec-Fetch-Site: same-origin',
+                'Sec-Fetch-Mode: cors',
+                'Sec-Fetch-Dest: empty',
+                'Referer: https://www.citygross.se/',
+                'Accept-Encoding: gzip, deflate, br',
+                'Priority: u=1, i'
+            ];
 
-        $response = curl_exec($ch);
-        curl_close($ch);
+            // Initialize cURL
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate,br'); // Handle compressed response
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+        }
 
         // Decode response
-        $data = json_decode($response, true);
-        if (!$data || empty($data['searchResults']['products'])) {
+        //$data = json_decode($response, true); //Failed for some reason?
+        $data = $response;
+        if (!$data || ($data['searchResults']['totalCount'] == 0)) {
             return null; // No product found
         }
 
         // Extract product details
         $product = $data['searchResults']['products'][0];
-        return [
-            sanitizeString('name' => $product['name'] ?? 'Unknown')/*,
-            'brand' => $product['brand'] ?? 'Unknown',
+        /*
+        $this->result = [
+            //sanitizeString('name' => $product['name'] ?? 'Unknown')/*,
+            'name' => $product['name'] ?? 'Unknown')
+            /*'brand' => $product['brand'] ?? 'Unknown',
             'description' => strip_tags($product['description'] ?? ''),
             'category' => $product['category'] ?? 'Unknown',
             'origin' => $product['countryOfOrigin'] ?? 'Unknown',
@@ -86,7 +96,18 @@ class ProviderCitygross extends LookupProvider {
             'price' => $product['productStoreDetails']['prices']['currentPrice']['price'] ?? null,
             'price_unit' => $product['productStoreDetails']['prices']['currentPrice']['comparativePriceUnit'] ?? '',
             'nutrients' => $this->extractNutrients($product)*/
-        ];
+        //]
+
+        $productName = sanitizeString($product['name']);
+        $genericName = null;
+
+        if ($this->useGenericName) {
+            if (isset($product['name'])) {
+                $genericName = sanitizeString($product['name']);
+            }
+        }
+
+        return self::createReturnArray($this->returnNameOrGenericName($productName, $genericName));
     }
 
     private function extractNutrients($product) {
