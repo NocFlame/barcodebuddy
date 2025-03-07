@@ -41,62 +41,14 @@ class ProviderCitygross extends LookupProvider {
         $apiUrl = 'https://www.citygross.se/api/v1/Loop54/search/quick/?SearchQuery=';
         $url = $apiUrl . $barcode;
 
-        $connection_method = "web";
-        //$connection_method = "curl";
+        $data = $this->execute($url, METHOD_GET);
 
-        if ($connection_method == "web") {
-            $response = $this->execute($url, METHOD_GET);
-        } elseif ($connection_method == "curl"){
-            $headers = [
-                'Host: www.citygross.se',
-                'Sec-Ch-Ua-Platform: "Linux"',
-                'Accept-Language: en-US,en;q=0.9',
-                'Accept: application/json',
-                'Sec-Ch-Ua: "Chromium";v="133", "Not(A:Brand";v="99"',
-                'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
-                'Sec-Ch-Ua-Mobile: ?0',
-                'Sec-Fetch-Site: same-origin',
-                'Sec-Fetch-Mode: cors',
-                'Sec-Fetch-Dest: empty',
-                'Referer: https://www.citygross.se/',
-                'Accept-Encoding: gzip, deflate, br',
-                'Priority: u=1, i'
-            ];
-
-            // Initialize cURL
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate,br'); // Handle compressed response
-
-            $response = curl_exec($ch);
-            curl_close($ch);
-        }
-
-        // Decode response
-        //$data = json_decode($response, true); //Failed for some reason?
-        $data = $response;
         if (!$data || ($data['searchResults']['totalCount'] == 0)) {
             return null; // No product found
         }
 
         // Extract product details
         $product = $data['searchResults']['products'][0];
-        /*
-        $this->result = [
-            //sanitizeString('name' => $product['name'] ?? 'Unknown')/*,
-            'name' => $product['name'] ?? 'Unknown')
-            /*'brand' => $product['brand'] ?? 'Unknown',
-            'description' => strip_tags($product['description'] ?? ''),
-            'category' => $product['category'] ?? 'Unknown',
-            'origin' => $product['countryOfOrigin'] ?? 'Unknown',
-            'size' => $product['descriptiveSize'] ?? 'Unknown',
-            'image' => isset($product['images'][0]['url']) ? 'https://www.citygross.se/' . $product['images'][0]['url'] : null,
-            'price' => $product['productStoreDetails']['prices']['currentPrice']['price'] ?? null,
-            'price_unit' => $product['productStoreDetails']['prices']['currentPrice']['comparativePriceUnit'] ?? '',
-            'nutrients' => $this->extractNutrients($product)*/
-        //]
 
         $productName = sanitizeString($product['name']);
         $genericName = null;
@@ -108,26 +60,5 @@ class ProviderCitygross extends LookupProvider {
         }
 
         return self::createReturnArray($this->returnNameOrGenericName($productName, $genericName));
-    }
-
-    private function extractNutrients($product) {
-            $nutrients = [];
-            if (!empty($product['foodAndBeverageExtension']['nutrientInformations'][0]['nutrients'])) {
-                foreach ($product['foodAndBeverageExtension']['nutrientInformations'][0]['nutrients'] as $nutrient) {
-                    $nutrients[] = [
-                        'type' => $nutrient['typeCode'],
-                        'value' => $nutrient['value'],
-                        'unit' => $this->getNutrientUnit($nutrient['unitOfMeasure'])
-                    ];
-                }
-            }
-            return $nutrients;
-    }
-
-    private function getNutrientUnit($unitCode) {
-        $units = [
-            0 => 'g', 1 => 'mg', 2 => 'μg', 3 => 'kcal', 4 => 'kJ', 5 => 'kcal'
-        ];
-        return $units[$unitCode] ?? '';
     }
 }
