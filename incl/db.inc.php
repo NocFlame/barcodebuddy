@@ -54,6 +54,7 @@ const LOOKUP_ID_FEDERATION    = "7";
 const LOOKUP_ID_PLUS          = "8";
 const LOOKUP_ID_DISCOGS       = "9";
 const LOOKUP_ID_CITYGROSS     = "10";
+const LOOKUP_ID_SG1           = "11";
 
 
 /**
@@ -102,6 +103,7 @@ class DatabaseConnection {
         "USE_GROCY_QU_FACTOR" => "0",
         "SHOW_STOCK_ON_SCAN" => "0",
         "LOOKUP_USE_CITYGROSS" => "1",
+        "LOOKUP_USE_SG1" => "1",
         "LOOKUP_USE_OFF" => "1",
         "LOOKUP_USE_UPC" => "1",
         "LOOKUP_USE_JUMBO" => "0",
@@ -124,6 +126,7 @@ class DatabaseConnection {
         "BBUDDY_SERVER_NEXTSYNC" => "0",
         "LOOKUP_ORDER" =>
             LOOKUP_ID_CITYGROSS . "," .
+            LOOKUP_ID_SG1 . "," .
             LOOKUP_ID_OPENFOODFACTS . "," .
             LOOKUP_ID_UPCDB . "," .
             LOOKUP_ID_UPCDATABASE . "," .

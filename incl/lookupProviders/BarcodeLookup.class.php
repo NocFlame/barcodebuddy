@@ -32,8 +32,9 @@ class BarcodeLookup {
         LOOKUP_ID_JUMBO         => "ProviderJumbo",
         LOOKUP_ID_OPENGTINDB    => "ProviderOpengtindb",
         LOOKUP_ID_DISCOGS       => "ProviderDiscogs",
+        LOOKUP_ID_FEDERATION    => "ProviderFederation",
         LOOKUP_ID_CITYGROSS     => "ProviderCitygross",
-        LOOKUP_ID_FEDERATION    => "ProviderFederation"
+        LOOKUP_ID_SG1           => "ProviderSG1"
     );
 
     /**

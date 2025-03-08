@@ -26,6 +26,7 @@ require_once __DIR__ . "/ProviderOpengtindb.php";
 require_once __DIR__ . "/ProviderDiscogs.php";
 require_once __DIR__ . "/ProviderFederation.php";
 require_once __DIR__ . "/ProviderCitygross.php";
+require_once __DIR__ . "/ProviderSG1.php";
 
 abstract class LookupProviderType
 {
@@ -39,6 +40,7 @@ abstract class LookupProviderType
     const Plus = 7;
     const Discogs = 8;
     const Citygross = 9;
+    const SG1 = 10;
 }
 
 class LookupProvider {
